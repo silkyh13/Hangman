@@ -35,13 +35,13 @@ h1 {
   display: none;
 }
 
-.wrong-letters-container #wrong-letters {
+.wrong-letters-container {
   position: absolute;
   top: 20px;
   right: 20px;
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-  text-align: right;
+  text-align: right; */
 }
 
 .wrong-letters-container p {
@@ -55,7 +55,7 @@ h1 {
 .word {
   display: flex;
   position: absolute;
-
+  /* bottom: 10px; */
   left: 50%;
   /* center it */
   transform: translateX(-50%);

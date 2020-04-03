@@ -44,6 +44,23 @@ function showNotification() {
   }, 2000);
 }
 
+//add wrong letter to div
+function updateWrongLettersEl() {
+  let incorrect = wrongLetters.length;
+  // Display wrong letters
+  wrongLettersEl.innerHTML = `${incorrect > 0 ? "<p>Wrong Letters</p>" : ""}
+  ${wrongLetters.map(letter => `<span>${letter}</span>`).join("")}
+  `;
+  //Display parts
+  figureParts.forEach((part, index) => {
+    if (index < incorrect) {
+      part.style.display = "block";
+    } else {
+      part.style.display = "none";
+    }
+  });
+}
+
 //Adding keys to correctLetters and wrongLetters
 //add listener on key last pressed
 window.addEventListener("keydown", e => {
@@ -61,6 +78,14 @@ window.addEventListener("keydown", e => {
         //already enter this letter
         showNotification();
       }
+    } else {
+      //if wrongLetters does not have letter
+      if (!wrongLetters.includes(letter)) {
+        wrongLetters.push(letter);
+        updateWrongLettersEl();
+      }
+      //already has wrong letter
+      showNotification();
     }
   }
 });
