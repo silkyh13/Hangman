@@ -1,0 +1,41 @@
+{
+  "name": "hangman",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.1.0",
+    "babel-preset-react": "^6.24.1",
+    "body-parser": "^1.19.0",
+    "casual": "^1.6.2",
+    "css-loader": "^3.5.2",
+    "express": "^4.17.1",
+    "faker": "^4.1.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "style-loader": "^1.1.3",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --watch --mode development",
+    "serve": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silkyh13/Hangman.git"
+  },
+  "author": "Silin Dang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/silkyh13/Hangman/issues"
+  },
+  "homepage": "https://github.com/silkyh13/Hangman#readme"
+}
