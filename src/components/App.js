@@ -2,7 +2,13 @@ import React, { useEffect, Component } from "react";
 import "../styles/App.css";
 const faker = require("faker");
 
-let wordEl, finalMessage, popup;
+let wordEl,
+  wrongLettersEl,
+  playAgainBtn,
+  popup,
+  notification,
+  finalMessage,
+  figureParts;
 
 const correctLetters = [];
 const wrongLetters = [];
@@ -26,17 +32,56 @@ function displayWord() {
   }
 }
 
+function showNotification() {
+  notification.classList.add("show");
+  setTimeout(() => {
+    notification.classList.remove("show");
+  }, 2000);
+}
+function updateWrongLettersEl() {
+  let incorrect = wrongLetters.length;
+  wrongLettersEl.innerHTML = `${incorrect > 0 ? "<p>Wrong Letters</p>" : ""}
+  ${wrongLetters.map((letter) => `<span>${letter}</span>`).join("")}
+  `;
+  //Display parts
+  figureParts.forEach((part, index) => {
+    if (index < incorrect) {
+      part.style.display = "block";
+    } else {
+      part.style.display = "none";
+    }
+  });
+  if (wrongLetters.length === figureParts.length) {
+    finalMessage.innerText = "Sorry, you lose. 😕";
+    popup.style.display = "flex";
+  }
+}
 const Board = () => {
   const ref = React.useRef(null);
   const display = function () {
     React.useEffect(() => {
       wordEl = document.getElementById("word");
+      wrongLettersEl = document.getElementById("wrong-letters");
+      playAgainBtn = document.getElementById("play-button");
       finalMessage = document.getElementById("final-message");
       popup = document.getElementById("popup-container");
+      notification = document.getElementById("notification-container");
+      figureParts = document.querySelectorAll(".figure-part");
       displayWord();
+      //reset board when u either lose or win
+      playAgainBtn.addEventListener("click", () => {
+        correctLetters.splice(0);
+        wrongLetters.splice(0);
+        selectedWord = faker.random.word().toLowerCase();
+        displayWord();
+        updateWrongLettersEl();
+        popup.style.display = "none";
+      });
     });
   };
+
   display();
+
   return (
     <div>
       <h1>Hangman</h1>
@@ -73,10 +118,6 @@ const Board = () => {
 };
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleKeyPress = (e) => {
     const keyCode = e.keyCode;
     if (keyCode >= 65 && keyCode <= 90) {
@@ -86,14 +127,23 @@ class App extends React.Component {
           correctLetters.push(letter);
           displayWord();
         } else {
-          //already enter this letter
-          // showNotification();
+          showNotification();
+        }
+      } else {
+        if (!wrongLetters.includes(letter)) {
+          wrongLetters.push(letter);
+          updateWrongLettersEl();
+        } else {
+          showNotification();
         }
       }
     }
   };
+
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyPress, false);
+
+    // this.playAgain();
   }
 
   render() {
