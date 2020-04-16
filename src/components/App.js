@@ -8,8 +8,11 @@ let wordEl,
   popup,
   notification,
   finalMessage,
-  figureParts;
-
+  figureParts,
+  lost,
+  won;
+let win = 0;
+let lose = 0;
 const correctLetters = [];
 const wrongLetters = [];
 let selectedWord = faker.random.word().toLowerCase();
@@ -27,7 +30,9 @@ function displayWord() {
     .join("")}`;
   const innerWord = wordEl.innerText.replace(/\n/g, "");
   if (innerWord === selectedWord) {
+    win++;
     finalMessage.innerText = "Congratulations! You won! 😃";
+    won.innerText = `Won: ${win}`;
     popup.style.display = "flex";
   }
 }
@@ -52,7 +57,9 @@ function updateWrongLettersEl() {
     }
   });
   if (wrongLetters.length === figureParts.length) {
+    lose++;
     finalMessage.innerText = "Sorry, you lose. 😕";
+    lost.innerText = `Lost: ${lose}`;
     popup.style.display = "flex";
   }
 }
@@ -67,6 +74,8 @@ const Board = () => {
       popup = document.getElementById("popup-container");
       notification = document.getElementById("notification-container");
       figureParts = document.querySelectorAll(".figure-part");
+      lost = document.getElementById("lost");
+      won = document.getElementById("won");
       displayWord();
       //reset board when u either lose or win
       playAgainBtn.addEventListener("click", () => {
@@ -102,6 +111,10 @@ const Board = () => {
         <div className="wrong-letters-container">
           <div id="wrong-letters"></div>
         </div>
+        <div className="score-container">
+          <div id="won">Won: {win}</div>
+          <div id="lost">Lost: {lose}</div>
+        </div>
         <div className="word" id="word"></div>
       </div>
       <div className="popup-container" id="popup-container">
@@ -118,6 +131,9 @@ const Board = () => {
 };
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   handleKeyPress = (e) => {
     const keyCode = e.keyCode;
     if (keyCode >= 65 && keyCode <= 90) {
@@ -142,8 +158,6 @@ class App extends React.Component {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyPress, false);
-
-    // this.playAgain();
   }
 
   render() {
