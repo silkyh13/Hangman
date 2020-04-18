@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 
 export default function Word(props) {
-  console.log(props.word);
+  console.log(props.selectedWord, "correct letters :", props.correctLetters);
   return (
     <div className="word" id="word">
-      {props.word.split("").map((letter, index) => {
+      {props.selectedWord.split("").map((letter, index) => {
         return (
           <div className="letter" key={index}>
             {props.correctLetters.includes(letter) ? letter : ""}

@@ -26,7 +26,10 @@ export default function Board(props) {
           <div id="won">Won: </div>
           <div id="lost">Lost: </div>
         </div>
-        <Word word={props.word} correctLetters={props.correctLetters} />
+        <Word
+          selectedWord={props.selectedWord}
+          correctLetters={props.correctLetters}
+        />
       </div>
       <div className="popup-container" id="popup-container">
         <div className="popup">
@@ -34,7 +37,12 @@ export default function Board(props) {
           <button id="play-button">Play again</button>
         </div>
       </div>
-      <div className="notification-container" id="notification-container">
+      <div
+        className={
+          props.show ? "notification-container show" : "notification-container"
+        }
+        id="notification-container"
+      >
         <p>You have already enter this letter.</p>
       </div>
     </div>

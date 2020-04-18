@@ -8,14 +8,68 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      word: "",
-      correctLetters: ["a", "e", "i"],
+      selectedWord: "",
+      correctLetters: [],
+      show: false,
     };
   }
+
+  showNotification = () => {
+    console.log(this.state.selectedWord);
+    this.setState({
+      show: true,
+    });
+    setTimeout(() => {
+      this.setState({
+        show: false,
+      });
+    }, 2000);
+  };
+  handleKeyPress = (e) => {
+    // e.preventDefault();
+    const keyCode = e.keyCode;
+    if (keyCode >= 65 && keyCode <= 90) {
+      const letter = e.key;
+      let copy = this.state.correctLetters;
+      if (this.state.selectedWord.includes(letter)) {
+        if (!this.state.correctLetters.includes(letter)) {
+          copy.push(letter);
+          this.setState({
+            correctLetters: copy,
+          });
+          this.addLetter();
+          this.getLetters();
+        } else {
+          this.showNotification();
+        }
+      }
+    }
+  };
+
   componentDidMount = () => {
+    document.addEventListener("keydown", this.handleKeyPress, false);
+    this.handleNewGame();
+  };
+  //works
+  handleNewGame = () => {
     chat.on("this", (data) => {
       this.setState({
-        word: data.word,
+        selectedWord: data.selectedWord,
+      });
+    });
+  };
+
+  getLetters = () => {
+    chat.on("letters", (data) => {
+      this.setState({
+        correctLetters: data.guessedLetters.correctLetters,
+      });
+    });
+  };
+  addLetter = () => {
+    chat.on("letters", (data) => {
+      chat.emit("my other event", {
+        correctLetters: this.state.correctLetters,
       });
     });
   };
@@ -23,8 +77,9 @@ class App extends React.Component {
     return (
       <div>
         <Board
-          word={this.state.word}
+          selectedWord={this.state.selectedWord}
           correctLetters={this.state.correctLetters}
+          show={this.state.show}
         />
       </div>
     );
