@@ -2,9 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
-const faker = require("faker");
-let selectedWord = faker.random.word().toLowerCase();
-let guessedLetters = { correctLetters: [] };
+const randomWords = require("random-words");
+let selectedWord = randomWords().toLowerCase();
+let correctLetters = [];
+let wrongLetters = [];
 app.use(express.static("public"));
 app.use(bodyParser.json());
 
@@ -20,9 +21,16 @@ const io = require("socket.io")(server);
 
 io.on("connection", (socket) => {
   io.emit("this", { selectedWord });
-  io.emit("letters", { guessedLetters });
+  io.emit("letters", { correctLetters });
+  io.emit("wrong", { wrongLetters });
+  socket.on("my word event", (data) => {
+    console.log(data.selectedWord);
+    selectedWord = data.selectedWord;
+  });
   socket.on("my other event", (data) => {
-    guessedLetters.correctLetters = data.correctLetters;
-    console.log("new letters?", guessedLetters.correctLetters, data);
+    correctLetters = data.correctLetters;
+  });
+  socket.on("my wrong event", (data) => {
+    wrongLetters = data.wrongLetters;
   });
 });

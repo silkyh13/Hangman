@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
 import Word from "./Word";
+import WrongLetters from "./WrongLetters";
 
 export default function Board(props) {
+  console.log(props.selectedWord);
+
   return (
     <div>
       <h1>Hangman</h1>
@@ -19,9 +22,8 @@ export default function Board(props) {
           <line x1="170" y1="180" x2="150" y2="150" className="figure-part" />
           <line x1="130" y1="180" x2="150" y2="150" className="figure-part" />
         </svg>
-        <div className="wrong-letters-container">
-          <div id="wrong-letters"></div>
-        </div>
+        <WrongLetters wrongLetters={props.wrongLetters} />
+
         <div className="score-container">
           <div id="won">Won: </div>
           <div id="lost">Lost: </div>
@@ -31,9 +33,16 @@ export default function Board(props) {
           correctLetters={props.correctLetters}
         />
       </div>
-      <div className="popup-container" id="popup-container">
+      <div
+        className={
+          props.showSign ? "popup-container flex" : "popup-container none"
+        }
+        id="popup-container"
+      >
         <div className="popup">
-          <h2 id="final-message"></h2>
+          <h2 id="final-message">
+            {props.win ? "Congratulations! You won! 😃" : "Sorry, you lose. 😕"}
+          </h2>
           <button id="play-button">Play again</button>
         </div>
       </div>
