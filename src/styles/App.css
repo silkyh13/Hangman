@@ -34,7 +34,9 @@ h1 {
 .figure-part {
   display: none;
 }
-
+.block {
+  display: block;
+}
 .score-container {
   position: absolute;
   top: 30%;
@@ -92,11 +94,16 @@ h1 {
   left: 0;
   right: 0;
   /* display: flex; */
-  display: none;
+  /* display: none; */
   align-items: center;
   justify-content: center;
 }
-
+.flex {
+  display: flex;
+}
+.none {
+  display: none;
+}
 .popup {
   background: lightsteelblue;
   border-radius: 2px;
