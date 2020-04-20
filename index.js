@@ -24,7 +24,7 @@ io.on("connection", (socket) => {
   io.emit("letters", { correctLetters });
   io.emit("wrong", { wrongLetters });
   socket.on("my word event", (data) => {
-    console.log(data.selectedWord);
+    // console.log(data.selectedWord);
     selectedWord = data.selectedWord;
   });
   socket.on("my other event", (data) => {

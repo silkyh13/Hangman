@@ -34,7 +34,9 @@ h1 {
 .figure-part {
   display: none;
 }
-
+.block {
+  display: block;
+}
 .score-container {
   position: absolute;
   top: 30%;

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 export default function WrongLetters(props) {
-  let incorrect = props.wrongLetters.length;
+  let incorrect = props.wrongLetters;
   return (
     <div className="wrong-letters-container">
       <div id="wrong-letters">

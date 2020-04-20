@@ -20,7 +20,6 @@ class App extends React.Component {
   }
 
   showNotification = () => {
-    console.log(this.state.selectedWord);
     this.setState({
       show: true,
     });
@@ -120,12 +119,11 @@ class App extends React.Component {
       });
     });
     let wrongLetters = this.state.wrongLetters;
-    if (wrongLetters.length >= Object.keys(this.state.dict).length) {
+    if (wrongLetters.length >= 6) {
       this.setState({
         win: false,
         showSign: true,
       });
-      console.log("lost");
     }
   };
   resetWord = () => {
