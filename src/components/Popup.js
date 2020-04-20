@@ -11,8 +11,12 @@ export default function Popup(props) {
       <div className="popup">
         <h2 id="final-message">
           {props.win ? "Congratulations! You won! 😃" : "Sorry, you lose. 😕"}
+          <br />
+          The word was {props.selectedWord}.
         </h2>
-        <button id="play-button">Play again</button>
+        <button id="play-button" onClick={props.resetBoard}>
+          Play again
+        </button>
       </div>
     </div>
   );

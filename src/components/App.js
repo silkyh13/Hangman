@@ -12,7 +12,7 @@ class App extends React.Component {
       selectedWord: "",
       correctLetters: [],
       wrongLetters: [],
-      show: false,
+      notify: false,
       dict: {},
       win: false,
       showSign: false,
@@ -21,11 +21,11 @@ class App extends React.Component {
 
   showNotification = () => {
     this.setState({
-      show: true,
+      notify: true,
     });
     setTimeout(() => {
       this.setState({
-        show: false,
+        notify: false,
       });
     }, 2000);
   };
@@ -38,23 +38,25 @@ class App extends React.Component {
       let badCopy = this.state.wrongLetters;
       if (this.state.selectedWord.includes(letter)) {
         if (!this.state.correctLetters.includes(letter)) {
-          copy.push(letter);
-          this.setState({
-            correctLetters: copy,
-          });
-          this.addLetter();
-          this.getLetters();
+          if (!this.state.showSign) {
+            copy.push(letter);
+            this.setState({
+              correctLetters: copy,
+            });
+            this.addLetter();
+          }
         } else {
           this.showNotification();
         }
       } else {
         if (!this.state.wrongLetters.includes(letter)) {
-          badCopy.push(letter);
-          this.setState({
-            wrongLetters: badCopy,
-          });
-          this.addBadLetter();
-          this.getBadLetters();
+          if (this.state.wrongLetters.length < 6) {
+            badCopy.push(letter);
+            this.setState({
+              wrongLetters: badCopy,
+            });
+            this.addBadLetter();
+          }
         } else {
           this.showNotification();
         }
@@ -65,6 +67,35 @@ class App extends React.Component {
   componentDidMount = () => {
     document.addEventListener("keydown", this.handleKeyPress, false);
     this.handleNewGame();
+    this.getBadLetters();
+    this.getLetters();
+    this.getVictory();
+  };
+  resetBoard = () => {
+    let selectedWord = randomWords().toLowerCase();
+    //send new word
+    chat.emit("my word event", {
+      selectedWord: selectedWord,
+    });
+    //send new state show sign
+    chat.emit("my victory event", {
+      win: true,
+      showSign: false,
+    });
+    chat.emit("my other event", {
+      correctLetters: [],
+    });
+    chat.emit("my wrong event", {
+      wrongLetters: [],
+    });
+  };
+  getVictory = () => {
+    chat.on("result", (data) => {
+      this.setState({
+        win: data.win,
+        showSign: data.showSign,
+      });
+    });
   };
   //works
   handleNewGame = () => {
@@ -82,23 +113,21 @@ class App extends React.Component {
       });
     });
   };
-
   getLetters = () => {
-    chat.on("letters", (data) => {
+    chat.on("correct", (data) => {
       this.setState({
         correctLetters: data.correctLetters,
       });
     });
   };
   addLetter = () => {
-    chat.on("letters", (data) => {
-      chat.emit("my other event", {
-        correctLetters: this.state.correctLetters,
-      });
+    chat.emit("my other event", {
+      correctLetters: this.state.correctLetters,
     });
+    this.getLetters();
     let correctLetters = this.state.correctLetters;
     if (correctLetters.length === Object.keys(this.state.dict).length) {
-      this.setState({
+      chat.emit("my victory event", {
         win: true,
         showSign: true,
       });
@@ -113,37 +142,28 @@ class App extends React.Component {
     });
   };
   addBadLetter = () => {
-    chat.on("wrong", (data) => {
-      chat.emit("my wrong event", {
-        wrongLetters: this.state.wrongLetters,
-      });
+    chat.emit("my wrong event", {
+      wrongLetters: this.state.wrongLetters,
     });
     let wrongLetters = this.state.wrongLetters;
     if (wrongLetters.length >= 6) {
-      this.setState({
+      chat.emit("my victory event", {
         win: false,
         showSign: true,
       });
     }
   };
-  resetWord = () => {
-    let newWord = randomWords().toLowerCase();
-    console.log(newWord);
-    chat.on("this", (data) => {
-      chat.emit("my word event", {
-        selectedWord: newWord,
-      });
-    });
-  };
+
   render() {
     return (
       <div>
         <Board
+          resetBoard={this.resetBoard}
           showSign={this.state.showSign}
           win={this.state.win}
           selectedWord={this.state.selectedWord}
           correctLetters={this.state.correctLetters}
-          show={this.state.show}
+          notify={this.state.notify}
           wrongLetters={this.state.wrongLetters}
         />
       </div>

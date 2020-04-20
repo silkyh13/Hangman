@@ -41,20 +41,23 @@ export default function Board(props) {
         </svg>
         <WrongLetters wrongLetters={props.wrongLetters} />
 
-        <div className="score-container">
-          <div id="won">Won: </div>
-          <div id="lost">Lost: </div>
-        </div>
         <Word
           selectedWord={props.selectedWord}
           correctLetters={props.correctLetters}
         />
       </div>
-      <Popup showSign={props.showSign} win={props.win} />
+      <Popup
+        selectedWord={props.selectedWord}
+        resetBoard={props.resetBoard}
+        showSign={props.showSign}
+        win={props.win}
+      />
 
       <div
         className={
-          props.show ? "notification-container show" : "notification-container"
+          props.notify
+            ? "notification-container show"
+            : "notification-container"
         }
         id="notification-container"
       >
